@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Exports\RoleExport;
 use App\Imports\RoleImport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Jobs\ProcessPodcast;
 
 
 
@@ -64,6 +65,8 @@ class RoleAPIController extends Controller
     public function store(RoleRequest $request)
     {
         $role = Role::create($request->all());
+        ProcessPodcast::dispatch($role);
+
         return User::GetMessage(new RoleResource($role), config('constants.messages.create_success'));
     }
 
